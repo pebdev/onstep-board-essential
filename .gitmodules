@@ -1,0 +1,3 @@
+[submodule "dependencies/OnStep"]
+	path = dependencies/OnStep
+	url = git@github.com:pebdev/OnStep.git
