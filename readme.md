@@ -2,8 +2,6 @@
 
 [OnStep](https://onstep.groups.io/g/main/wiki) is an open source project to control a telescope mount (goto). 
 
-
-
 Essential board is an hardware solution which use OnStep with the essential parts only :
 
 - ESP32 to run OnStep
@@ -11,16 +9,12 @@ Essential board is an hardware solution which use OnStep with the essential part
 - GPS (time and location)
 - Humidity, barometric pressure and ambient temperature sensors
 
-
-
-This project provides :
+**This project provides :**
 
 - Design of the Essential board
 - Updated OnStep project for this board
 
-
-
-## Main components ##
+**Main components :**
 
 - (x1) **Essential board** (this project)
 
@@ -55,23 +49,108 @@ This project provides :
 
 
 
-**//////////// ADD PICTURES HERE ////////////**
+## Hardware change
+
+ESP32 board has a big defect, it resets when a serial connection is opened, caused by RTS (Ready To Send) if it's enabled.
+
+For this reason, a patch must be applied.
+
+///////// TO COMPLETE
+
+
+
+## Fetch project
+
+Be sure that you have the Essential branch of OnStep :
+
+  ```
+  git submodule update --init --recursive
+  git checkout board-essential-v1
+  ```
 
 
 
 ## Installation
 
-This project use ARDUINO environment, install it before to start.
+### ESP32 board support
 
-Then, follow these steps :
+This project use ARDUINO environment, install it before to start and follow these steps :
 
-**//////////// ADD STEPS HERE ////////////**
+**1-** Open **OnStep.ino** file from Arduino application
+
+**2-** Add ESP32 board support to Arduino :
+
+- Select *Arduino > Preferences* "Additional Boards Manager URLs"
+  - add: **https://dl.espressif.com/dl/package_esp32_index.json**
+- Install support for this board from within the menu *Tools > Board > Boards Manager*
+  - Seach for esp32 and install the version **1.0.4 only**
+
+**3-** Select ESP32 board for the project :
+
+- Tools > Board Type > ESP32 Arduino > ESP32 Dev Module
+
+
+
+### Libraries
+
+#### TinyGPSPlus
+
+**1-** Download sources from github : [link](https://github.com/mikalhart/TinyGPSPlus/archive/refs/heads/master.zip)
+
+**2-** Install it with Arduino GUI :
+
+- Sketch > Include Library > Add .zip Library ...
+- Select the zip file (or folder because OSX unzip it after downloading)
+- Now you can delete zip file or folder
+
+#### Adafruit BMP280 Library
+
+**1-** Install it with Arduino GUI :
+
+- Tools > Manage Libraries
+- Install Adafruit BMP280 Library
+
+
+
+## Build
+
+Nothing special, just build the code.
+
+If you have this error when you build OnStep :
+
+```
+ValueError: dlsym(RTLD_DEFAULT, kIOMasterPortDefault): symbol not found
+```
+
+Follow these steps :
+
+1- Install **python3** with MacPorts (or Homebrew, etc)
+
+2- Install **pyserial** package :
+
+```
+python -m pip install pyserial
+```
+
+3- Update esptool :
+
+```
+cd ~/Library/Arduino15/packages/esp32/tools/esptool_py/2.6.1
+mv esptool esptool.orig
+curl https://raw.githubusercontent.com/espressif/esptool/master/esptool.py -o esptool
+chmod +x esptool
+```
+
+If you still get the same `symbol not found` error then open **esptool** and change the first line from `#!/usr/bin/env python` to `#!/usr/local/bin/python3`.
+
 
 
 
 ## How to flash the board
 
-**//////////// ADD STEPS HERE ////////////**
+According the ESP32 hardware patch that we applied, it's mandatory to follow these steps to reflash the board :
+
+/////// To complete
 
 
 
@@ -82,57 +161,32 @@ This project was tested with these parts :
 - Bresser EQ3 mount, with custom goto addon : [stl files](https://cults3d.com/fr/modèle-3d/divers/bresser-eq3-motor-addon)
 - Telescope application (OSX)
 
+A simple way to test if OnStep is alive on the board, use a serial terminal and enter this command :
+
+```
+:GVP#
+```
+
+All commands of OnStep can be found [here](https://onstep.groups.io/g/main/wiki/23755).
 
 
 
+## Customization ##
+
+According your mount, you must change values of your gear ratios.
+
+**1-** Use this [excel sheet](https://baheyeldin.com/sites/baheyeldin.com/files/OnStep-Calculations.xls) to calculate data for your mount
+
+**2-** Update these defines into the **config.h** file in the Arduino project
 
 
 
+## Contribute
 
-
-## TODO ##
-
-
-
-
+To use latest version of the upstream repository :
 
 ```shell
 git remote add upstream https://github.com/hjd1964/OnStep
 ```
 
 
-
-
-
-
-
-- Select *File>Preferences* "Additional Boards Manager URLs" and add: **https://dl.espressif.com/dl/package_esp32_index.json**
-- Install support for this board from within the menu *Tools>Board>Boards Manager*
-  - Use ESP32 version **1.0.4 only**
-
-Configuration
-
- [**Online Configuration Generator**](http://o.baheyeldin.com:1111/) 
-
-In the **Arduino IDE Tools menu** select the correct **board** and **port**.
-
- The ESP32 comes in many types but the ESP32 Dev Module using its default settings generally seems to work for the variants we use.
-
-
-
-- To test onstep 
-  -  **:GVP#**
-
-
-
-
-
-next step : https://onstep.groups.io/g/main/wiki/3862
-
-
-
-dependencies 
-
-Rtc by Makuna
-
-Adafruit BMP280
