@@ -24,7 +24,7 @@ Essential board is an hardware solution which use OnStep with the essential part
 
 - (x1) **BME208** sensor
 
-- (x3) **Nema17** motor (DE, RA and focuser)
+- (x3) **Nema17** motor 0.9° (DE, RA and focuser)
 
   ```
   Manufacturer Part Number: 17HS4401 (42BYGH)
@@ -53,9 +53,14 @@ Essential board is an hardware solution which use OnStep with the essential part
 
 ESP32 board has a big defect, it resets when a serial connection is opened, caused by RTS (Ready To Send) if it's enabled.
 
-For this reason, a patch must be applied.
+it's a problem because GPS isn't ready when PC/MAC application request position at startup.
 
-///////// TO COMPLETE
+For this reason, a patch must be applied :
+
+- R22 resistance must be turned by 90°
+- un push button must be welded  between the resistance and the empty pad
+
+![](images/esp32_patch_rts.png)
 
 
 
@@ -76,8 +81,16 @@ Be sure that you have the Essential branch of OnStep :
 Because we use tools provided with Xcode, install it from the AppleStore.
 When it's done start it and install proposed tool.
 
+**Note :** when a new major version of the SDK (12.x to 13.x) is installed, an issue can occure.
+
+It can be fixed by using these commands :
+
+```
 sudo xcode-select --reset
 sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+```
+
+
 
 ### ESP32 board support
 
@@ -163,11 +176,15 @@ or
 `sed -i -e 's/=python /=python3 /g' ~/Library/Arduino15/packages/esp32/hardware/esp32/*/platform.txt`
 
 
+
+
 ## How to flash the board
 
 According the ESP32 hardware patch that we applied, it's mandatory to follow these steps to reflash the board :
 
-/////// To complete
+- Start flahing with ARduino IDE
+- When Arduino IDE try to send application to the ESP32, push the push button that we welded before
+- When flashing is started, release this button
 
 
 
@@ -205,5 +222,4 @@ To use latest version of the upstream repository :
 ```shell
 git remote add upstream https://github.com/hjd1964/OnStep
 ```
-
 
