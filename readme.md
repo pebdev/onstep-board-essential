@@ -72,6 +72,13 @@ Be sure that you have the Essential branch of OnStep :
 
 ## Installation
 
+### Xcode
+Because we use tools provided with Xcode, install it from the AppleStore.
+When it's done start it and install proposed tool.
+
+sudo xcode-select --reset
+sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
 ### ESP32 board support
 
 This project use ARDUINO environment, install it before to start and follow these steps :
@@ -124,9 +131,17 @@ ValueError: dlsym(RTLD_DEFAULT, kIOMasterPortDefault): symbol not found
 
 Follow these steps :
 
-1- Install **python3** with MacPorts (or Homebrew, etc)
+1- Install **python3 (3.10)** with MacPorts (or Homebrew, etc)
+```
+sudo port install python310
+```
 
-2- Install **pyserial** package :
+2- Install **pip** tool
+```
+sudo port install py310-pip
+```
+
+3- Install **pyserial** package :
 
 ```
 python -m pip install pyserial
@@ -143,7 +158,9 @@ chmod +x esptool
 
 If you still get the same `symbol not found` error then open **esptool** and change the first line from `#!/usr/bin/env python` to `#!/usr/local/bin/python3`.
 
+or 
 
+`sed -i -e 's/=python /=python3 /g' ~/Library/Arduino15/packages/esp32/hardware/esp32/*/platform.txt`
 
 
 ## How to flash the board
